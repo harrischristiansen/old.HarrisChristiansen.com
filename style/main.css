@@ -1,0 +1,456 @@
+@charset "UTF-8";
+
+/* Harris Christiansen */
+/* Site Properties */
+html,body {
+	text-align:center;
+	font:12px Helvetica,Myraid Pro,Trebuchet MS;
+	text-transform:uppercase;
+	background-image:url(/images/bg.png);
+	padding-top:7px;
+	width: 100%;
+}
+
+a,a:visited,a:active {
+	color:#8e8e8e;
+	text-decoration:none;
+}
+
+a:hover {
+	color:#b5b5b5;
+}
+
+.shadowedBox {
+	background-color: #272727;
+	margin-left:auto;
+	margin-right:auto;
+	box-shadow:inset 0 4px 15px #000;
+	color:#FFFFFF;
+	padding:20px;
+	width:860px;
+}
+
+/* Navigation Bar Styling */
+#navBar {
+	background-color:#E5E5E5;
+	border-bottom:3px solid #191919;
+	box-shadow:0 1px 10px #000;
+	width:100%;
+	height:35px;
+	text-align:center;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:100;
+}
+
+.navItem {
+	padding-top:10px;
+	height:25px;
+	width:150px;
+	display:inline-block;
+	font-size:12px;
+	margin-left: 0px;
+	-webkit-transition-duration: 0.8s;
+}
+
+.navItem:hover {
+	color:#FFFFFF;
+}
+
+.navHome:hover {
+	background-color: #326CAE;
+}
+
+.navPort:hover {
+	background-color: #43B636;
+}
+
+.navSkills:hover {
+	background-color: #EEEE44;
+}
+
+.navCont:hover {
+	background-color: #74348B;
+}
+
+/* Home Page Styling */
+#homePage {
+	width:1000px;
+	height:650px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#hpName {
+	color: #DDDDDD;
+	text-shadow: 4px 4px 2px #000000;
+	font-size: 80px;
+	width:1000px;
+	height:80px;
+	padding-top: 70px;
+	padding-bottom: 8px;
+	background-image: url(/images/colos.png);
+	background-position: right top;
+	background-repeat: no-repeat;
+	background-size: auto;
+	font-weight: normal;
+	margin: 0px;
+}
+
+#hpEmailAdr {
+	text-align: left;
+}
+
+#hpText {
+	height:240px;
+	margin-top: 100px;
+	font-size: 14px;
+	font-family: serif;
+}
+
+#hpTextHead {
+	height:40px;
+	font-family: cursive;
+}
+
+.hpTextHeadItem {
+	height:38px;
+	float:left;
+	width:200px;
+	margin-left:10px;
+	padding-top: 2px;
+	font-size: 28px;
+}
+
+.hp1Head {
+	color: #326CAE;
+}
+
+.hp2Head {
+	color: #43B636;
+}
+
+.hp3Head {
+	color: #EEEE44;
+}
+
+.hp4Head {
+	color: #74348B;
+}
+
+.hpTextItemsItem {
+	float:left;
+	height:200px;
+	width:200px;
+	margin-left:10px;
+	text-transform:none;
+}
+
+.hpTextSep {
+	width:100%;
+	height:3px;
+	margin-bottom:10px;
+	background-image:linear-gradient(left,#326CAE 12%,#43B636 38%,#EEEE44 63%,#74348B 88%);
+	background-image:-o-linear-gradient(left,#326CAE 12%,#43B636 38%,#EEEE44 63%,#74348B 88%);
+	background-image:-moz-linear-gradient(left,#326CAE 12%,#43B636 38%,#EEEE44 63%,#74348B 88%);
+	background-image:-webkit-linear-gradient(left,#326CAE 12%,#43B636 38%,#EEEE44 63%,#74348B 88%);
+	background-image:-ms-linear-gradient(left,#326CAE 12%,#43B636 38%,#EEEE44 63%,#74348B 88%);
+	background-image:-webkit-gradient(linear,left 0,right 0,color-stop(0.12,#326CAE),color-stop(0.38,#43B636),color-stop(0.63,#EEEE44),color-stop(0.88,#74348B));
+}
+
+/* Portfolio Page Styling */
+#portfolioPage {
+	width:100%;
+	min-width: 1040px;
+	height:1800px;
+	background:url(/images/wood2.jpg);
+	box-shadow:0px 1px 10px #000;
+	padding-top:10px;
+}
+
+.centerContent {
+	width:1020px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#portfolioPageTitle {
+	color: #FFFFFF;
+	text-shadow: 4px 4px 2px #000000;
+	font-size: 28px;
+	font-family: cursive;
+}
+
+.portContRow {
+	margin-bottom:50px;
+	height:270px;
+	width:1020px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.portContTitle {
+	text-align: left;
+	margin-left: 30px;
+	margin-bottom: 15px;
+	height: 22px;
+	font-size: 24px;
+	color: #FFFFFF;
+	text-shadow: 4px 4px 2px #000000;
+	font-family: cursive;
+}
+
+.portContItem {
+	float:left;
+	margin-left:20px;
+	margin-right:20px;
+	width:300px;
+}
+
+.portContImg {
+	width:300px;
+	height:218px;
+	background:url(/images/shade.png)no-repeat;
+	position:relative;
+}
+
+.portContImg a img {
+	width:280px;
+	height:200px;
+	position:absolute;
+	top:9px;
+	left:10px;
+}
+
+.portContImg a .portContImgExpander {
+	display:none;
+}
+
+.portContImg a:hover .portContImgExpander {
+	display:block;
+}
+
+.portContText {
+	margin-top:10px;
+	width:300px;
+	height:45px;
+	background:url(../images/info2.png)no-repeat;
+	font-size:11px;
+	line-height:17px;
+}
+
+.portContTextRow {
+	width:290px;
+	padding-top:3px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.portContTextLeft {
+	float:left;
+	text-align:left;
+}
+
+.portContTextRight {
+	float:right;
+	text-align:right;
+}
+
+a.photobox:link {
+	display:block;
+	width:1000px;
+	height:210px;
+}
+
+/* About Page Styling */
+#skillsPage {
+	height:160px;
+	padding-top: 100px;
+	text-align:center;
+}
+
+#skillsLine {
+	text-align: center;
+	font-size: 18px;
+	text-shadow: 2px 2px 1px #888888;
+	height: 24px;
+	width:100%;
+}
+
+#skillsLine span {
+	font-size: 14px;
+	text-shadow: none;
+}
+
+#skillsData {
+	height:155px;
+	text-transform:none;
+	text-align: left;
+}
+
+.skillColumn {
+	width: 200px;
+	padding-left: 5px;
+	float: left;
+}
+
+.skillColumn:first-child {
+	padding-left: 0px;
+}
+
+.skillColumn:last-child {
+	width: 240px;
+}
+
+.skillColumnHead {
+	text-align: center;
+	text-decoration: underline;
+	font-size: 17px;
+}
+
+.skillLine {
+	font-size: 16px;
+	height: 21px;
+}
+
+.skillStarEmpty {
+	color: #FFFFFF;
+	font-size: 18px;
+}
+
+.skillStarFull {
+	content: "\2605";
+	color: #CC0033;
+	font-size: 18px;
+}
+
+/* Contact Page Styling */
+#contactPage {
+	width: 100%;
+	min-width: 1040px;
+	height:543px;
+	background:url(/images/contact.png) repeat-x;
+	margin-top:150px;
+	box-shadow:0 1px 10px #000;
+}
+
+#contactForm {
+	width:700px;
+	height:415px;
+	margin-right:auto;
+	margin-left:auto;
+	padding-top:100px;
+}
+
+#contactFormTable {
+	border: none;
+}
+
+.contactInput {
+	width:191px;
+	height:26px;
+	padding-left:5px;
+	background:url(/images/input_box.png) no-repeat;
+	border:none;
+	color:#fff;
+	margin-bottom:10px;
+	float:left;
+}
+
+.contactField {
+	background:url(/images/textarea.png) no-repeat;
+	width:429px;
+	height:196px;
+	border:none;
+	color:#fff;
+	padding-top:10px;
+	padding-left:10px;
+	resize:none;
+}
+
+#contactNameImg {
+	background:url(/images/contact_info.png) 1px no-repeat;
+	width:80px;
+	height:23px;
+}
+
+#contactSubjectImg {
+	background:url(/images/contact_info.png) -97px 0 no-repeat;
+	width:100px;
+	height:23px;
+}
+
+#contactEmailImg {
+	background:url(/images/contact_info.png) -206px 0 no-repeat;
+	width:80px;
+	height:23px;
+}
+
+#contactMsgImg {
+	background:url(/images/contact_info.png) -298px 0 no-repeat;
+	width:122px;
+	height:23px;
+	margin-top:-100px;
+}
+
+.contactIcon {
+	background:url(/images/contactme.png)center no-repeat;
+	width:215px;
+	height:100px;
+	float:right;
+	margin-bottom:-400px;
+	margin-right:145px;
+}
+
+.button {
+	background:url(/images/button.png)bottom no-repeat;
+	width:133px;
+	height:33px;
+	border:none;
+	display:block;
+	margin-top:5px;
+}
+
+.button:hover {
+	background:url(/images/button.png)top no-repeat;
+	width:133px;
+	height:33px;
+	border:none;
+	display:block;
+	margin-top:5px;
+}
+
+/* Footer Styling */
+#socialBar {
+	padding-top: 20px;
+	text-align: left;
+	margin-bottom: 200px;
+}
+
+#siteFoot {
+	width:100%;
+	height:25px;
+	background:#242424;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	border-top: 1px solid #999999;
+	font:10px Helvetica,Myraid Pro,Trebuchet MS;
+}
+
+.footNav {
+	text-align:center;
+	float:right;
+	margin-right:100px;
+	padding-top: 6px;
+	color:#e0e0e0;
+}
+
+.copyright {
+	text-align:center;
+	float:left;
+	margin-left:100px;
+	padding-top: 6px;
+	color:#e0e0e0;
+}

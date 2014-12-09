@@ -1,0 +1,361 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green116\blue0;\red170\green13\blue145;\red28\green0\blue207;
+}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab529
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\fs22 \cf2 \CocoaLigature0 // Harris Christiansen\cf0 \
+\cf2 // Copyright Harris Christiansen 2013\cf0 \
+\cf2 // FRC Team 3245 - Waterford School\cf0 \
+\cf2 // Las Vegas Regionals 2012 - Rev 1\cf0 \
+\cf2 // Written March 4, 2012\cf0 \
+\
+\cf2 // Updated for Gyro 11-17-12\cf0 \
+\cf2 // Ported to NetBeans frc13 1-8-13\cf0 \
+\
+\cf2 // Package\cf0 \
+\cf3 package\cf0  edu.wpi.first.wpilibj.templates;\
+\cf2 // For 2012 Robot - Single Stick Control\cf0 \
+\
+\cf2 // Imports\cf0 \
+\cf3 import\cf0  edu.wpi.first.wpilibj.camera.*;\
+\cf3 import\cf0  edu.wpi.first.wpilibj.*;\
+\
+\
+\cf3 public\cf0  \cf3 class\cf0  Corvey \cf3 extends\cf0  IterativeRobot \{\
+    \
+        \cf2 // Motors\cf0 \
+	\cf3 private\cf0  Jaguar leftMotor, rightMotor;\
+	\cf3 private\cf0  Victor tipperMotor, shootMotorOne, shootMotorTwo, topLiftMotor, btmLiftMotor;\
+	\
+	\cf2 // Current Motor Speeds\cf0 \
+	\cf3 private\cf0  \cf3 double\cf0  leftSpeed, rightSpeed, tipSpeed, shootSpeed, topLiftSpeed, btmLiftSpeed;\
+	\cf3 private\cf0  \cf3 double\cf0  setShootSpeed;\
+	\cf3 private\cf0  \cf3 boolean\cf0  driveDirection=\cf3 true\cf0 ; \cf2 // True=Normal, False=Reverse\cf0 \
+	\
+	\cf2 // Autonomous Period Tracker\cf0 \
+        \cf3 private\cf0  \cf3 int\cf0  currentPeriod=\cf4 0\cf0 ;\
+        \cf3 private\cf0  \cf3 boolean\cf0  autoFeed=\cf3 false\cf0 ;\
+	\
+	\cf2 // Controllers\cf0 \
+	Joystick pilotStick, copilotStick;\
+	\
+	\cf2 // Camera\cf0 \
+	\cf2 //AxisCamera camera;\cf0 \
+	\
+	\cf2 // Pilot Controls\cf0 \
+	\cf3 int\cf0  leftStick=\cf4 2\cf0 , rightStick=\cf4 6\cf0 , btmFeedBtn=\cf4 7\cf0 , fastBtn=\cf4 6\cf0 , slowBtn=\cf4 5\cf0 ;\
+	\
+	\cf2 // CoPilot Controls\cf0 \
+	\cf3 int\cf0  tipUpBtn=\cf4 4\cf0 , tipDnBtn=\cf4 2\cf0 , CObtmFeedBtn=\cf4 7\cf0 , topFeedBtn=\cf4 8\cf0 , revFeedBtn=\cf4 4\cf0 , shootBtn=\cf4 8\cf0 , fastShootBtn=\cf4 3\cf0 , slowShootBtn=\cf4 1\cf0 , fastShootIncBtn=\cf4 10\cf0 , slowShootIncBtn=\cf4 9\cf0 , setShootFullBtn=\cf4 11\cf0 , reverseDriveBtn=\cf4 13\cf0 ;\
+	\
+	\cf2 // Gyro\cf0 \
+	\cf2 //Gyro mainGyro;\cf0 \
+	\
+	\cf2 // Encoder\cf0 \
+	\cf2 //Encoder leftEncoder;\cf0 \
+	\
+	\cf2 // Auto State\cf0 \
+	\cf3 int\cf0  autoState=\cf4 0\cf0 ;\
+    \
+    \cf3 public\cf0  \cf3 void\cf0  robotInit() \{\
+    	\cf2 // PWM Ports\cf0 \
+    	leftMotor = \cf3 new\cf0  Jaguar(\cf4 2\cf0 );\
+    	rightMotor = \cf3 new\cf0  Jaguar(\cf4 1\cf0 );\
+    	tipperMotor = \cf3 new\cf0  Victor(\cf4 5\cf0 );\
+    	shootMotorOne = \cf3 new\cf0  Victor(\cf4 6\cf0 );\
+    	shootMotorTwo = \cf3 new\cf0  Victor(\cf4 7\cf0 );\
+    	topLiftMotor = \cf3 new\cf0  Victor(\cf4 4\cf0 );\
+    	btmLiftMotor = \cf3 new\cf0  Victor(\cf4 3\cf0 );\
+    	\
+    	\
+    	\cf2 // Joysticks\cf0 \
+    	pilotStick = \cf3 new\cf0  Joystick(\cf4 1\cf0 );\
+    	copilotStick = \cf3 new\cf0  Joystick(\cf4 2\cf0 );\
+    	\
+    	\cf2 // Camera\cf0 \
+    	\cf2 //camera = AxisCamera.getInstance();\cf0 \
+    	\
+    	\cf2 // Zero Everything\cf0 \
+	leftSpeed=\cf4 0\cf0 ;rightSpeed=\cf4 0\cf0 ;tipSpeed=\cf4 0\cf0 ;shootSpeed=\cf4 0\cf0 ;topLiftSpeed=\cf4 0\cf0 ;btmLiftSpeed=\cf4 0\cf0 ;\
+		\
+        \cf2 //mainGyro=new Gyro(1,1);\cf0 \
+	\cf2 //mainGyro.setSensitivity(.007);\cf0 \
+		\
+	\cf2 //leftEncoder=new Encoder(1,2);\cf0 \
+	\cf2 //leftEncoder.start();\cf0 \
+    \}\
+    \cf3 int\cf0  autoShootDelay=\cf4 1\cf0 ;\
+    \cf3 public\cf0  \cf3 void\cf0  autonomousInit() \{\
+    	\cf2 //autoShootDelay=40;\cf0 \
+	setShootSpeed=\cf4 0.35\cf0 ;\
+    	currentPeriod=\cf4 0\cf0 ;\
+    	driveDirection=\cf3 true\cf0 ;\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  autonomousPeriodic() \{\
+    	\cf3 if\cf0 (autoFeed) \{\
+    		autoReverse();\
+    	\} \cf3 else\cf0  \{\
+        	autoWaitShoot();\
+    		\cf2 //autoTurnDrive();\cf0 \
+    	\}\
+    	updateMotors();\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  teleopInit() \{\
+    	setShootSpeed=\cf4 0.95\cf0 ;\
+    	\cf2 // Zero Everything\cf0 \
+	leftSpeed=\cf4 0\cf0 ;rightSpeed=\cf4 0\cf0 ;tipSpeed=\cf4 0\cf0 ;shootSpeed=\cf4 0\cf0 ;topLiftSpeed=\cf4 0\cf0 ;btmLiftSpeed=\cf4 0\cf0 ;\
+    	driveDirection=\cf3 true\cf0 ;\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  teleopPeriodic() \{\
+    	\cf2 //updateLifter();\cf0 \
+    	\cf2 ////updateShooterSpeed();\cf0 \
+    	\cf2 //updateShooter();\cf0 \
+    	\cf2 //updateTipper();\cf0 \
+    	updateDrive();\
+    	updateReverseDrive();\
+    	updateShootLift();\
+        updateMotors();\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  disabledInit() \{\
+        \
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  disabledPeriodic() \{\
+        \cf3 if\cf0 (DriverStation.getInstance().getDigitalIn(\cf4 1\cf0 )) \{ autoShootDelay=\cf4 40\cf0 ; \}\
+        \cf3 if\cf0 (DriverStation.getInstance().getDigitalIn(\cf4 2\cf0 )) \{ autoShootDelay=\cf4 215\cf0 ; \}\
+        \cf3 if\cf0 (DriverStation.getInstance().getDigitalIn(\cf4 3\cf0 )) \{ autoShootDelay=\cf4 435\cf0 ; \}\
+        \cf3 if\cf0 (DriverStation.getInstance().getDigitalIn(\cf4 4\cf0 )) \{ autoFeed=\cf3 true\cf0 ; \}\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  testInit() \{\
+        \
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  testPeriodic() \{\
+    \
+    \}\
+    \
+    \cf2 //// Custom Functions\cf0 \
+    \cf2 /////////////// Custom Functions //////////////////\cf0 \
+    \
+    \
+    \cf3 public\cf0  \cf3 int\cf0  currentPeriodShootLift=\cf4 0\cf0 ;\
+    \cf3 public\cf0  \cf3 void\cf0  updateShootLift() \{\
+    	\cf3 if\cf0 (pilotStick.getRawButton(shootBtn)) \{\
+    	\cf3 if\cf0 (currentPeriodShootLift<=\cf4 120\cf0 ) \{\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=setShootSpeed;\
+    		topLiftSpeed=\cf4 0\cf0 ;\
+    		btmLiftSpeed=\cf4 0\cf0 ;\
+    	\}\
+    	\cf3 else\cf0  \{\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=setShootSpeed;\
+    		topLiftSpeed=\cf4 0.65\cf0 ;\
+    		btmLiftSpeed=\cf4 0.42\cf0 ;\
+    	\}\
+    	currentPeriodShootLift++;\
+    	\} \cf3 else\cf0  \{\
+    		currentPeriodShootLift=\cf4 0\cf0 ;\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=\cf4 0.0\cf0 ;\
+    		topLiftSpeed=\cf4 0\cf0 ;\
+    		btmLiftSpeed=\cf4 0\cf0 ;\
+    	\}\
+    	\cf2 // Reverse Feeder\cf0 \
+    	\cf3 if\cf0 (pilotStick.getRawButton(revFeedBtn)) \{btmLiftSpeed=\cf4 -0.3\cf0 ;topLiftSpeed=\cf4 -0.3\cf0 ;\}\
+    	\cf3 if\cf0 (pilotStick.getRawButton(btmFeedBtn)) \{btmLiftSpeed=\cf4 0.5\cf0 ;\}\
+    \}\
+    \
+    \cf2 // Lifter Functions\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  updateLifter() \{\
+    	\cf2 // Bottom Feeder\cf0 \
+    	\cf3 if\cf0 (pilotStick.getRawButton(btmFeedBtn)) \{btmLiftSpeed=\cf4 0.5\cf0 ;\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (copilotStick.getRawButton(CObtmFeedBtn)) \{btmLiftSpeed=\cf4 0.5\cf0 ;\}\
+    	\cf3 else\cf0  \{btmLiftSpeed=\cf4 0.0\cf0 ;\}\
+    	\
+    	\cf2 // Top Feeder\cf0 \
+    	\cf3 if\cf0 (copilotStick.getRawButton(topFeedBtn)) \{topLiftSpeed=\cf4 0.5\cf0 ;\}\
+    	\cf3 else\cf0  \{topLiftSpeed=\cf4 0.0\cf0 ;\}\
+    	\
+    	\cf2 // Reverse Feeder\cf0 \
+    	\cf3 if\cf0 (copilotStick.getRawButton(revFeedBtn)) \{btmLiftSpeed=\cf4 -0.3\cf0 ;topLiftSpeed=\cf4 -0.3\cf0 ;\}\
+    \}\
+    \
+    \cf2 // Shooter Functions\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  updateShooter() \{\
+    	\cf3 if\cf0 (copilotStick.getRawButton(shootBtn)) \{shootSpeed=setShootSpeed;\}\
+    	\cf3 else\cf0  \{shootSpeed=\cf4 0.0\cf0 ;\}\
+    \}\
+    \
+    \cf2 // Shooter Speed Changer\cf0 \
+    \cf3 private\cf0  \cf3 boolean\cf0  shooterIncred=\cf3 false\cf0 ;\
+    \cf3 public\cf0  \cf3 void\cf0  updateShooterSpeed() \{\
+    	\cf3 if\cf0 (copilotStick.getRawButton(fastShootBtn)&&!shooterIncred) \{setShootSpeed=setShootSpeed\cf4 +0.05\cf0 ;shooterIncred=\cf3 true\cf0 ;System.out.println((\cf3 int\cf0 )(setShootSpeed*\cf4 100\cf0 ));\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (copilotStick.getRawButton(slowShootBtn)&&!shooterIncred) \{setShootSpeed=setShootSpeed\cf4 -0.05\cf0 ;shooterIncred=\cf3 true\cf0 ;System.out.println((\cf3 int\cf0 )(setShootSpeed*\cf4 100\cf0 ));\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (pilotStick.getRawButton(fastShootIncBtn)&&!shooterIncred) \{setShootSpeed=setShootSpeed\cf4 +0.01\cf0 ;shooterIncred=\cf3 true\cf0 ;System.out.println((\cf3 int\cf0 )(setShootSpeed*\cf4 100\cf0 ));\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (pilotStick.getRawButton(slowShootIncBtn)&&!shooterIncred) \{setShootSpeed=setShootSpeed\cf4 -0.01\cf0 ;shooterIncred=\cf3 true\cf0 ;System.out.println((\cf3 int\cf0 )(setShootSpeed*\cf4 100\cf0 ));\}\
+    	\cf3 if\cf0 (!copilotStick.getRawButton(fastShootBtn)&&!copilotStick.getRawButton(slowShootBtn)&&!pilotStick.getRawButton(fastShootIncBtn)&&!pilotStick.getRawButton(slowShootIncBtn)) \{shooterIncred=\cf3 false\cf0 ;\}\
+    	\cf3 if\cf0 (copilotStick.getRawButton(setShootFullBtn)) \{ setShootSpeed=\cf4 0.65\cf0 ; \}\
+    \}\
+    \cf3 private\cf0  \cf3 boolean\cf0  driveChanged=\cf3 false\cf0 ;\
+    \cf3 public\cf0  \cf3 void\cf0  updateReverseDrive() \{\
+    	\cf3 if\cf0 (copilotStick.getRawButton(reverseDriveBtn)&&!driveChanged&&driveDirection) \{driveChanged=\cf3 true\cf0 ; driveDirection=\cf3 false\cf0 ;\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (copilotStick.getRawButton(reverseDriveBtn)&&!driveChanged&&!driveDirection) \{driveChanged=\cf3 true\cf0 ; driveDirection=\cf3 true\cf0 ;\}\
+    	\cf3 if\cf0 (!copilotStick.getRawButton(reverseDriveBtn))\{driveChanged=\cf3 false\cf0 ;\}\
+    \}\
+    \
+    \cf2 // Tipper Functions\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  updateTipper() \{\
+    	\cf3 if\cf0 (copilotStick.getRawButton(tipUpBtn)) \{tipSpeed=\cf4 0.30\cf0 ;\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (copilotStick.getRawButton(tipDnBtn)) \{tipSpeed=\cf4 -0.22\cf0 ;\}\
+    	\cf3 else\cf0  \{tipSpeed=\cf4 0.0\cf0 ;\}\
+    \}\
+    \
+    \cf2 // Drive Functions\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  updateDrive() \{\
+    	\cf3 double\cf0  drivePercent=\cf4 0.55\cf0 ;\
+    	\cf3 if\cf0 (pilotStick.getRawButton(fastBtn)) \{drivePercent=\cf4 1.00\cf0 ;\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (pilotStick.getRawButton(slowBtn)) \{drivePercent=\cf4 0.3\cf0 ;\}\
+    	leftSpeed=pilotStick.getRawAxis(leftStick)*drivePercent;\
+    	rightSpeed=pilotStick.getRawAxis(rightStick)*drivePercent;\
+    \}\
+    \
+    \cf2 // Set Motor Speeds\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  updateMotors() \{\
+    	\cf3 if\cf0 (driveDirection) \{ \cf2 // Normal - Drive Forward\cf0 \
+    		leftMotor.set(leftSpeed);\
+    		rightMotor.set(-rightSpeed); \cf2 // Motor Reversed\cf0 \
+    	\} \cf3 else\cf0  \cf3 if\cf0 (!driveDirection) \{ \cf2 // Reverse Drive\cf0 \
+    		leftMotor.set(-rightSpeed);\
+    		rightMotor.set(leftSpeed); \cf2 // Motor Reversed\cf0 \
+    	\}\
+    	tipperMotor.set(-tipSpeed); \cf2 // Motor Reversed\cf0 \
+    	shootMotorOne.set(shootSpeed);\
+    	shootMotorTwo.set(shootSpeed);\
+    	topLiftMotor.set(-topLiftSpeed); \cf2 // Motor Reversed\cf0 \
+    	btmLiftMotor.set(-btmLiftSpeed); \cf2 // Motor Reversed\cf0 \
+    	\
+    	\
+    	\cf2 // Output Gyro+Encoder Data\cf0 \
+    	\cf2 //double currentAngle=mainGyro.getAngle();\cf0 \
+    	\cf2 //int currentTicks=leftEncoder.get();\cf0 \
+    	\cf2 //System.out.println("Angle: "+currentAngle+" Ticks: "+currentTicks);\cf0 \
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  autoWaitShoot() \{\
+    	\cf3 if\cf0 (currentPeriod<=autoShootDelay) \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=\cf4 0\cf0 ;\
+    		topLiftSpeed=\cf4 0\cf0 ;\
+    		btmLiftSpeed=\cf4 0\cf0 ;\
+    	\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (currentPeriod<=\cf4 1600\cf0 ) \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=setShootSpeed;\
+    		topLiftSpeed=\cf4 0.4\cf0 ;\
+    		btmLiftSpeed=\cf4 0.35\cf0 ;\
+    	\}\
+    	currentPeriod++;\
+    \}\
+    \cf3 public\cf0  \cf3 void\cf0  autoReverse() \{\
+    	\cf3 if\cf0 (currentPeriod<=\cf4 1600\cf0 ) \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    		tipSpeed=\cf4 0\cf0 ;\
+    		shootSpeed=\cf4 0.0\cf0 ;\
+    		topLiftSpeed=\cf4 -0.4\cf0 ;\
+    		btmLiftSpeed=\cf4 -0.35\cf0 ;\
+    	\}\
+    	currentPeriod++;\
+    \}\
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    \cf2 //// Autonomous\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  autoTurnDrive() \{\
+    	\cf3 if\cf0 (autoState==\cf4 0\cf0 ) \{ turnToAngle(\cf4 360\cf0 ); \}\
+    	\cf2 //else if(autoState==1) \{ driveAtAngle(30.0,1200); \}\cf0 \
+    	\cf2 //else if(autoState==2) \{ turnToAngle(210); \}\cf0 \
+    	\cf2 //else if(autoState==3) \{ driveAtAngle(210.0,1200); \}\cf0 \
+    	\cf2 //else if(autoState==4) \{ turnToAngle(0); \}\cf0 \
+    	\cf3 else\cf0  \{ zeroAll(); \}\
+    \}\
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    \
+    \cf3 public\cf0  \cf3 void\cf0  zeroAll() \{\
+    	leftSpeed=\cf4 0\cf0 ;\
+		rightSpeed=\cf4 0\cf0 ;\
+		tipSpeed=\cf4 0\cf0 ;\
+		shootSpeed=\cf4 0.0\cf0 ;\
+		topLiftSpeed=\cf4 0.0\cf0 ;\
+		btmLiftSpeed=\cf4 0.0\cf0 ;\
+    \}\
+    \
+    \cf3 public\cf0  \cf3 void\cf0  nextState() \{\
+    	\cf2 //leftEncoder.reset();\cf0 \
+    	autoState++;\
+    \}\
+    \
+    \cf2 // P Loop Turning\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  turnToAngle(\cf3 double\cf0  targetAngle) \{\
+    	\cf2 //double currentAngle=mainGyro.getAngle();\cf0 \
+    	\cf3 double\cf0  currentAngle=\cf4 0\cf0 ;\
+    	\cf3 double\cf0  angleOff=targetAngle-currentAngle;\
+    	\cf3 double\cf0  mult=\cf4 0.03\cf0 ;\
+    	\cf3 double\cf0  turnSpeed=angleOff*mult;\
+    	\cf3 if\cf0 (turnSpeed>\cf4 0\cf0 ) \{\
+    		leftSpeed=-turnSpeed;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    	\} \cf3 else\cf0  \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=turnSpeed;\
+    	\}\
+    	\cf3 if\cf0 (Math.abs(currentAngle-targetAngle)>=\cf4 3\cf0 ) \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    		nextState();\
+    	\}\
+    \}\
+    \
+    \cf2 // P Loop Driving\cf0 \
+    \cf3 public\cf0  \cf3 void\cf0  driveAtAngle(\cf3 double\cf0  targetAngle, \cf3 int\cf0  ticksForward) \{\
+    	\cf2 //double currentAngle=mainGyro.getAngle();\cf0 \
+    	\cf2 //int currentTicks=leftEncoder.get();\cf0 \
+    	\cf3 double\cf0  currentAngle=\cf4 0\cf0 ;\
+    	\cf3 int\cf0  currentTicks=\cf4 0\cf0 ;\
+    	\cf3 double\cf0  mult=\cf4 0.04\cf0 ;\
+    	\cf3 double\cf0  angleOff=targetAngle-currentAngle;\
+    	\cf3 double\cf0  turn = mult*angleOff;\
+    	\cf3 if\cf0 (ticksForward>\cf4 0\cf0 &&currentTicks<(ticksForward\cf4 -100\cf0 ))\{\
+    		leftSpeed=\cf4 -0.5\cf0 -turn;\
+    		rightSpeed=\cf4 -0.5\cf0 +turn;\
+    	\}\
+    	\cf3 else\cf0  \cf3 if\cf0 (ticksForward<\cf4 0\cf0 &&currentTicks>(ticksForward\cf4 +100\cf0 ))\{\
+    		leftSpeed=\cf4 0.5\cf0 -turn;\
+    		rightSpeed=\cf4 0.5\cf0 +turn;\
+    	\}\
+    	\cf3 else\cf0  \{\
+    		leftSpeed=\cf4 0\cf0 ;\
+    		rightSpeed=\cf4 0\cf0 ;\
+    		nextState();\
+    	\}\
+    \}\
+    \
+\}\
+}
