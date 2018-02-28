@@ -6,4 +6,4 @@ Available at [old.harrischristiansen.com](http://old.harrischristiansen.com/) an
 
 ## Contributors
 
-@harrischristiansen [HarrisChristiansen.com](http://www.harrischristiansen.com) (harris@harrischristiansen.com)  
+@harrischristiansen [HarrisChristiansen.com](http://www.harrischristiansen.com) (code@harrischristiansen.com)  
